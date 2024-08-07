@@ -33,9 +33,11 @@ func (self VigenereCipher) Encrypt(text string) string {
 
 	fmt.Println(newKey)
 	for i := range newKey {
-		fmt.Println(text[i], newKey[i], (text[i]+newKey[i])%26)
-
-		message.WriteRune(rune(alph[(text[i]+newKey[i])%26]))
+		if text[i] < 'a' || text[i] > 'z' {
+			message.WriteRune(rune(text[i]))
+			continue
+		}
+		message.WriteRune(rune(alph[(text[i]-'a'+newKey[i]-'a')%26]))
 	}
 	return message.String()
 }
