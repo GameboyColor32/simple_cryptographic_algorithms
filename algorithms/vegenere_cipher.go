@@ -1,7 +1,6 @@
 package algorithms
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -22,22 +21,32 @@ func (self VigenereCipher) modifyKey(text string) string {
 	return strings.ToLower(sb.String())
 }
 
-func toChar(i int) rune {
-	return rune('a' + i)
-}
-
 func (self VigenereCipher) Encrypt(text string) string {
 	newKey := self.modifyKey(text)
 	var message strings.Builder
 	alph := "abcdefghijklmnopqrstuvwxyz"
 
-	fmt.Println(newKey)
 	for i := range newKey {
 		if text[i] < 'a' || text[i] > 'z' {
 			message.WriteRune(rune(text[i]))
 			continue
 		}
 		message.WriteRune(rune(alph[(text[i]-'a'+newKey[i]-'a')%26]))
+	}
+	return message.String()
+}
+
+func (self VigenereCipher) Decrypt(text string) string {
+	newKey := self.modifyKey(text)
+	var message strings.Builder
+	alph := "abcdefghijklmnopqrstuvwxyz"
+
+	for i := range newKey {
+		if text[i] < 'a' || text[i] > 'z' {
+			message.WriteRune(rune(text[i]))
+			continue
+		}
+		message.WriteRune(rune(alph[(text[i]-'a'-(newKey[i]-'a')+26)%26]))
 	}
 	return message.String()
 }

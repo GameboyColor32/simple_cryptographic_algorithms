@@ -12,7 +12,6 @@ func main() {
 	args := os.Args
 
 	for _, arg := range args[1:] {
-		fmt.Println(algo.Encrypt(arg), "decrypted::w")
-		//fmt.Println(algo.Encrypt(arg), "decrypted: ", algo.Decrypt(algo.Encrypt(arg)))
+		fmt.Println(algo.Encrypt(arg), "decrypted: ", algo.Decrypt(algo.Encrypt(arg)))
 	}
 }
