@@ -1,17 +1,31 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"github.com/GameboyColor32/simple_cryptographic_algorithms/algorithms"
+	"net/http"
 	"os"
+
+	//"github.com/GameboyColor32/simple_cryptographic_algorithms/algorithms"
+	"github.com/GameboyColor32/simple_cryptographic_algorithms/networking"
 )
 
 func main() {
-	algo := algorithms.CreateVigenereCipher("LEMON")
-	//algo := algorithms.CreateCaesarCipher(3)
-	args := os.Args
+	//algo := algorithms.CreateVigenereCipher("LEMON")
+	http.HandleFunc("/", networking.GenerateCipher) //algo := algorithms.CreateCaesarCipher(3)
+	//args := os.Args
 
-	for _, arg := range args[1:] {
-		fmt.Println(algo.Encrypt(arg), "decrypted: ", algo.Decrypt(algo.Encrypt(arg)))
+	err := http.ListenAndServe(":3333", nil)
+
+	if errors.Is(err, http.ErrServerClosed) {
+		fmt.Printf("server closed\n")
+	} else if err != nil {
+		fmt.Printf("error starting server: %s\n", err)
+		os.Exit(1)
 	}
+	//l := algorithms.CreateVigenereCipher("LEMON")
+	//fmt.Println(l.Encrypt("Hello"))
+	//for _, arg := range args[1:] {
+	//	fmt.Println(algo.Encrypt(arg), "decrypted: ", algo.Decrypt(algo.Encrypt(arg)))
+	//}
 }

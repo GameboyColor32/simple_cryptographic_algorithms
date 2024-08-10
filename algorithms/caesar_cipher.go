@@ -1,5 +1,7 @@
 package algorithms
 
+import "fmt"
+
 type CaesarCipher struct {
 	shift int
 }
@@ -12,6 +14,7 @@ func CreateCaesarCipher(shift int) *CaesarCipher {
 func (self CaesarCipher) Encrypt(text string) string {
 	shifted := []rune(text)
 
+	fmt.Println("Caesar")
 	for i, char := range text {
 		if char >= 'A' && char <= 'Z' {
 			shifted[i] = 'A' + (char-'A'+rune(self.shift))%26
