@@ -1,9 +1,19 @@
 package algorithms
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand/v2"
+
+	"github.com/GameboyColor32/simple_cryptographic_algorithms/interfaces"
+)
 
 type CaesarCipher struct {
 	shift int
+}
+
+func CreateRandomCaesarCipher() interfaces.Algorithm {
+	fmt.Println("Caesar's cipher")
+	return CaesarCipher{shift: rand.IntN(26)}
 }
 
 func CreateCaesarCipher(shift int) *CaesarCipher {
@@ -14,7 +24,6 @@ func CreateCaesarCipher(shift int) *CaesarCipher {
 func (self CaesarCipher) Encrypt(text string) string {
 	shifted := []rune(text)
 
-	fmt.Println("Caesar")
 	for i, char := range text {
 		if char >= 'A' && char <= 'Z' {
 			shifted[i] = 'A' + (char-'A'+rune(self.shift))%26

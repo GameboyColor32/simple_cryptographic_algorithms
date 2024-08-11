@@ -3,16 +3,21 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"os"
+	"time"
 
-	//"github.com/GameboyColor32/simple_cryptographic_algorithms/algorithms"
+	"github.com/GameboyColor32/simple_cryptographic_algorithms/algorithms"
 	"github.com/GameboyColor32/simple_cryptographic_algorithms/networking"
 )
 
 func main() {
-	//algo := algorithms.CreateVigenereCipher("LEMON")
+	rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	algo := algorithms.CreateXorCipher("test")
 	http.HandleFunc("/", networking.GenerateCipher) //algo := algorithms.CreateCaesarCipher(3)
+	fmt.Println(algo.Encrypt("Hello"), algo.Decrypt(algo.Encrypt("Hello")))
 	//args := os.Args
 
 	err := http.ListenAndServe(":3333", nil)

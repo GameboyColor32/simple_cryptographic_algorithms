@@ -2,15 +2,25 @@ package algorithms
 
 import (
 	"github.com/GameboyColor32/simple_cryptographic_algorithms/interfaces"
-	"math/rand"
-	"reflect"
-	"time"
+	"math/rand/v2"
 )
 
+func CreateRandomKey() string {
+	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+	length := rand.IntN(13)
+	key := make([]rune, length)
+	for i := range key {
+		key[i] = letters[rand.IntN(len(letters))]
+	}
+	return string(key)
+}
+
 func GenerateRandomCipher() interfaces.Algorithm {
-	constructors := map[string]interface{}{
-		"caesar":   CreateCaesarCipher,
-		"vigenere": CreateVigenereCipher,
+	constructors := map[string]func() interfaces.Algorithm{
+		"caesar":   CreateRandomCaesarCipher,
+		"vigenere": CreateRandomVigenereCipher,
+		"xor":      CreateRandomXorCipher,
 	}
 
 	keys := make([]string, 0, len(constructors))
@@ -18,19 +28,7 @@ func GenerateRandomCipher() interfaces.Algorithm {
 		keys = append(keys, k)
 	}
 
-	rand.Seed(time.Now().UnixNano())
+	selectedCipher := keys[rand.IntN(len(keys))]
 
-	selectedCipher := keys[rand.Intn(len(keys))]
-	constructor := reflect.ValueOf(constructors[selectedCipher])
-
-	var params []reflect.Value
-	if selectedCipher == "caesar" {
-		params = append(params, reflect.ValueOf(rand.Intn(26)+1))
-	} else if selectedCipher == "vigenere" {
-		params = append(params, reflect.ValueOf("LEMON"))
-	}
-
-	result := constructor.Call(params)
-
-	return result[0].Interface().(interfaces.Algorithm)
+	return constructors[selectedCipher]()
 }

@@ -3,10 +3,18 @@ package algorithms
 import (
 	"fmt"
 	"strings"
+
+	"github.com/GameboyColor32/simple_cryptographic_algorithms/interfaces"
 )
 
 type VigenereCipher struct {
 	key string
+}
+
+func CreateRandomVigenereCipher() interfaces.Algorithm {
+	fmt.Println("Vigenere Cipher")
+
+	return VigenereCipher{key: CreateRandomKey()}
 }
 
 func CreateVigenereCipher(key string) *VigenereCipher {
