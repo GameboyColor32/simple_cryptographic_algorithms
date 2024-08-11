@@ -8,16 +8,29 @@ import (
 )
 
 func GenerateRandomCipher() interfaces.Algorithm {
-	rand.Seed(time.Now().UnixNano())
-
-	types := []reflect.Type{
-		reflect.TypeOf(CaesarCipher{shift: rand.Intn(26) + 1}),
-		reflect.TypeOf(VigenereCipher{key: "LEMON"}),
+	constructors := map[string]interface{}{
+		"caesar":   CreateCaesarCipher,
+		"vigenere": CreateVigenereCipher,
 	}
 
-	randomIndex := rand.Intn(len(types))
-	selectedType := types[randomIndex]
-	newInstance := reflect.New(selectedType).Elem().Interface()
+	keys := make([]string, 0, len(constructors))
+	for k := range constructors {
+		keys = append(keys, k)
+	}
 
-	return newInstance.(interfaces.Algorithm)
+	rand.Seed(time.Now().UnixNano())
+
+	selectedCipher := keys[rand.Intn(len(keys))]
+	constructor := reflect.ValueOf(constructors[selectedCipher])
+
+	var params []reflect.Value
+	if selectedCipher == "caesar" {
+		params = append(params, reflect.ValueOf(rand.Intn(26)+1))
+	} else if selectedCipher == "vigenere" {
+		params = append(params, reflect.ValueOf("LEMON"))
+	}
+
+	result := constructor.Call(params)
+
+	return result[0].Interface().(interfaces.Algorithm)
 }

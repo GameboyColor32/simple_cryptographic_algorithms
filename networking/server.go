@@ -14,5 +14,5 @@ func GetCipher(w http.ResponseWriter, r *http.Request) {
 func GenerateCipher(w http.ResponseWriter, r *http.Request) {
 	cipher := algorithms.GenerateRandomCipher()
 
-	io.WriteString(w, cipher.Encrypt("Helloo"))
+	io.WriteString(w, cipher.Encrypt("Helloo")+"\n")
 }
