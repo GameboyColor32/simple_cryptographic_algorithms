@@ -1,8 +1,8 @@
 package algorithms
 
 import (
+	"encoding/hex"
 	"fmt"
-
 	"github.com/GameboyColor32/simple_cryptographic_algorithms/interfaces"
 )
 
@@ -21,16 +21,26 @@ func CreateXorCipher(key string) interfaces.Algorithm {
 }
 
 func (self XorCipher) Encrypt(text string) string {
-	encr := []rune(text)
-	key := []rune(self.key)
+	encr := []byte(text)
+	key := []byte(self.key)
 	keyLen := len(key)
 
-	for i, char := range encr {
-		encr[i] = char ^ key[i%keyLen]
+	for i := range encr {
+		encr[i] ^= key[i%keyLen]
 	}
-	return string(encr)
+	return hex.EncodeToString(encr)
 }
 
 func (self XorCipher) Decrypt(text string) string {
-	return self.Encrypt(text)
+	decoded, _ := hex.DecodeString(text)
+	encr := []byte(decoded)
+	key := []byte(self.key)
+	keyLen := len(key)
+
+	for i := range encr {
+		encr[i] ^= key[i%keyLen]
+	}
+	return string(encr)
+
+	//return self.Encrypt(text)
 }
